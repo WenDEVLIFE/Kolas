@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Kolas</string>
+
+    <!-- Splash -->
+    <string name="splash_logo_content_description">Kolas logo: a dog with sensing arcs</string>
+    <string name="splash_tagline">Sensing how your dog feels</string>
+    <string name="splash_loading">Preparing the emotion detector\u2026</string>
+    <string name="splash_error_title">Kolas could not start</string>
+    <string name="splash_error_generic">Something went wrong while starting up.</string>
+    <string name="splash_retry">Try again</string>
+
+    <!-- Home -->
+    <string name="home_title">Kolas</string>
+    <string name="home_placeholder">Dog emotion detection is on the way. Point the camera at your dog to read its mood.</string>
 </resources>

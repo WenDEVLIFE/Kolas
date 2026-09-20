@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- Brand palette (dog coat: black & tan with warm accents) -->
+    <color name="brand_charcoal">#FF1A1A1A</color>
+    <color name="brand_rust">#FF8B5A2B</color>
+    <color name="brand_amber">#FFE8A33D</color>
+    <color name="brand_signal_red">#FFC1272D</color>
+    <color name="brand_off_white">#FFFFF8F5</color>
+    <color name="brand_warm_black">#FF18120E</color>
+    <color name="brand_warm_tint">#FFF2DFD3</color>
+    <color name="brand_outline_variant">#FFD5C2B8</color>
+
+    <!-- Cold-start window background behind the system splash. -->
+    <color name="splash_background">#FFFFF8F5</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
