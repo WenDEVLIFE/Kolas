@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- API 31+: hand the cold-start splash over to the platform so the brand
+         mark shows immediately, with no flash before Compose draws. -->
+    <style name="Theme.Kolas.Splash" parent="Theme.Kolas">
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/koalas_logo</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/splash_background</item>
+    </style>
+</resources>
