@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark-mode counterpart of splash_background. Without this the system
+         splash flashes warm off-white before the dark Compose UI draws. -->
+    <color name="splash_background">#FF18120E</color>
+</resources>
