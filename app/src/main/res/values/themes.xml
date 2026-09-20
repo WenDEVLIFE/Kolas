@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Kolas" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Launch theme: shows the brand window background during cold start. -->
+    <style name="Theme.Kolas.Splash" parent="Theme.Kolas">
+        <item name="android:windowBackground">@color/splash_background</item>
+    </style>
 </resources>
