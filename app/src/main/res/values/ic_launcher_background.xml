@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Warm off-white plate so the black-and-tan mark reads like the brand sticker. -->
-    <color name="ic_launcher_background">#FFF8F5</color>
+    <color name="ic_launcher_background">#9A731F</color>
 </resources>
