@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Kolas</string>
 
+    <!-- Shared -->
+    <string name="navigate_back">Back</string>
+
     <!-- Splash -->
     <string name="splash_logo_content_description">Kolas logo: a dog with sensing arcs</string>
     <string name="splash_tagline">Sensing how your dog feels</string>
@@ -9,7 +12,55 @@
     <string name="splash_error_generic">Something went wrong while starting up.</string>
     <string name="splash_retry">Try again</string>
 
-    <!-- Home -->
-    <string name="home_title">Kolas</string>
-    <string name="home_placeholder">Dog emotion detection is on the way. Point the camera at your dog to read its mood.</string>
+    <!-- Main scaffold -->
+    <string name="main_title">Kolas</string>
+    <string name="main_tab_scan">Scan</string>
+    <string name="main_tab_history">History</string>
+    <string name="main_open_settings">Open settings</string>
+
+    <!-- Scan -->
+    <string name="scan_title">Scan</string>
+    <string name="scan_requesting_permission_title">Camera access</string>
+    <string name="scan_requesting_permission">Waiting for camera access\u2026</string>
+    <string name="scan_permission_denied_title">Camera access needed</string>
+    <string name="scan_permission_denied">Kolas needs the camera to read your dog\'s mood.</string>
+    <string name="scan_grant_permission">Grant access</string>
+    <string name="scan_camera_ready">Point the camera at your dog and tap to scan.</string>
+    <string name="scan_start">Start scan</string>
+    <string name="scan_capturing">Reading your dog\u2026</string>
+    <string name="scan_error_title">Scan failed</string>
+    <string name="scan_error_generic">Something went wrong while scanning.</string>
+    <string name="scan_retry">Try again</string>
+
+    <!-- History -->
+    <string name="history_empty_title">No scans yet</string>
+    <string name="history_empty_body">Your dog\'s mood readings will show up here.</string>
+    <string name="history_error_title">Could not load history</string>
+    <string name="history_error_generic">Something went wrong while loading your history.</string>
+    <string name="history_retry">Try again</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_loading">Loading settings\u2026</string>
+    <string name="settings_model_status">Emotion model</string>
+    <string name="settings_model_installed">Installed and ready.</string>
+    <string name="settings_model_missing">Not installed.</string>
+    <string name="settings_downloading">Downloading the model\u2026</string>
+
+    <!-- Result -->
+    <string name="result_title">Result</string>
+    <string name="result_detection_id">Detection %1$s</string>
+    <string name="result_loading_explanation">Explaining the reading\u2026</string>
+    <string name="result_explanation_failed_title">Explanation unavailable</string>
+    <string name="result_explanation_failed_generic">Something went wrong while explaining this reading.</string>
+    <string name="result_retry">Try again</string>
+    <string name="result_open_chat">Ask about this reading</string>
+
+    <!-- Chat -->
+    <string name="chat_title">Chat</string>
+    <string name="chat_no_model_title">Model not available</string>
+    <string name="chat_no_model">Download the emotion model to ask questions about this reading.</string>
+    <string name="chat_downloading">Downloading the model\u2026</string>
+    <string name="chat_ready">Ask anything about this reading.</string>
+    <string name="chat_generating">Thinking\u2026</string>
 </resources>

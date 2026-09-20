@@ -3,13 +3,13 @@ package com.wendev.kolas.ui.splash
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun SplashRoute(
     onFinished: () -> Unit,
-    viewModel: SplashViewModel = viewModel()
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
