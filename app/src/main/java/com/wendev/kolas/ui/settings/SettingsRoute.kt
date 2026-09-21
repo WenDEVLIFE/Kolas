@@ -14,6 +14,7 @@ fun SettingsRoute(
 
     SettingsScreen(
         state = state,
-        onBack = onBack
+        onBack = onBack,
+        onThemeModeSelected = viewModel::onThemeModeSelected
     )
 }
