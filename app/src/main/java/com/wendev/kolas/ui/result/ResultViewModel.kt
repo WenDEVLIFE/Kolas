@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * Slice 1 skeleton. The detection is read from storage and explained by the model
- * in a later slice; here the state stays in [ResultUiState.LoadingExplanation].
+ * in a later slice; here the honest default is [ResultUiState.Placeholder].
  */
 @HiltViewModel
 class ResultViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow<ResultUiState>(ResultUiState.LoadingExplanation)
+    private val _state = MutableStateFlow<ResultUiState>(ResultUiState.Placeholder)
     val state: StateFlow<ResultUiState> = _state.asStateFlow()
 
     fun retry() {

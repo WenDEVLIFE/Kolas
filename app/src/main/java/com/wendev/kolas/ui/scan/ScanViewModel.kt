@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @HiltViewModel
 class ScanViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow<ScanUiState>(ScanUiState.RequestingPermission)
+    private val _state = MutableStateFlow<ScanUiState>(ScanUiState.Placeholder)
     val state: StateFlow<ScanUiState> = _state.asStateFlow()
 
     private val _events = Channel<ScanEvent>(Channel.BUFFERED)

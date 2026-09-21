@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 @HiltViewModel
 class SettingsViewModel @Inject constructor() : ViewModel() {
 
-    private val _state = MutableStateFlow<SettingsUiState>(SettingsUiState.Loading)
+    // Slice 1 has no download flow yet, so the honest state is "no model installed".
+    // The real Content arrives with the AI slice.
+    private val _state = MutableStateFlow<SettingsUiState>(
+        SettingsUiState.Content(modelInstalled = false, modelVersion = null)
+    )
     val state: StateFlow<SettingsUiState> = _state.asStateFlow()
 }

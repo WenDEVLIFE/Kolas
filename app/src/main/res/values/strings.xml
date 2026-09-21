@@ -14,9 +14,20 @@
 
     <!-- Main scaffold -->
     <string name="main_title">Kolas</string>
+    <string name="main_tab_home">Home</string>
     <string name="main_tab_scan">Scan</string>
     <string name="main_tab_history">History</string>
     <string name="main_open_settings">Open settings</string>
+
+    <!-- Home -->
+    <string name="home_empty_title">No scans yet</string>
+    <string name="home_empty_body">Scan your dog to read their mood. Your readings will show up here.</string>
+    <string name="home_scan_cta">Scan your dog</string>
+    <string name="home_model_status_label">Emotion model</string>
+    <string name="home_model_status_not_installed">Not installed. Tap to manage in Settings.</string>
+    <string name="home_content_title">Recent scans</string>
+    <string name="home_content_body">Your most recent readings will show up here.</string>
+    <string name="home_error_title">Could not load Home</string>
 
     <!-- Scan -->
     <string name="scan_title">Scan</string>
@@ -31,6 +42,8 @@
     <string name="scan_error_title">Scan failed</string>
     <string name="scan_error_generic">Something went wrong while scanning.</string>
     <string name="scan_retry">Try again</string>
+    <string name="scan_placeholder_title">Scan not built yet</string>
+    <string name="scan_placeholder_body">This screen arrives in the next slice.</string>
 
     <!-- History -->
     <string name="history_empty_title">No scans yet</string>
@@ -55,6 +68,8 @@
     <string name="result_explanation_failed_generic">Something went wrong while explaining this reading.</string>
     <string name="result_retry">Try again</string>
     <string name="result_open_chat">Ask about this reading</string>
+    <string name="result_placeholder_title">Result not built yet</string>
+    <string name="result_placeholder_body">This screen arrives in the next slice.</string>
 
     <!-- Chat -->
     <string name="chat_title">Chat</string>

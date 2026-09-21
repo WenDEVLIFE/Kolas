@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,11 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.wendev.kolas.R
 import com.wendev.kolas.ui.theme.KolasTheme
 
-/** The two top-level tabs hosted by [MainScreen]. */
+/** The top-level tabs hosted by [MainScreen], in bottom-bar order. */
 enum class MainTab(
     @param:StringRes val labelRes: Int,
     val icon: ImageVector
 ) {
+    Home(labelRes = R.string.main_tab_home, icon = Icons.Filled.Home),
     Scan(labelRes = R.string.main_tab_scan, icon = Icons.Filled.Search),
     History(labelRes = R.string.main_tab_history, icon = Icons.AutoMirrored.Filled.List)
 }
@@ -115,6 +117,19 @@ private fun MainBottomBar(
                 )
             )
         }
+    }
+}
+
+@Preview(name = "Main - Home tab", showBackground = true)
+@Composable
+private fun MainHomePreview() {
+    KolasTheme {
+        MainScreen(
+            selectedTab = MainTab.Home,
+            onTabSelected = {},
+            onOpenSettings = {},
+            content = {}
+        )
     }
 }
 

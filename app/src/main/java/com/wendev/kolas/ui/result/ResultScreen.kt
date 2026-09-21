@@ -24,6 +24,13 @@ fun ResultScreen(
         modifier = modifier
     ) {
         when (state) {
+            // Slice 1 scaffold branch: delete when the real Result states land.
+            ResultUiState.Placeholder -> PlaceholderContent(
+                title = stringResource(R.string.result_placeholder_title),
+                body = stringResource(R.string.result_placeholder_body),
+                showProgress = false
+            )
+
             ResultUiState.LoadingExplanation -> PlaceholderContent(
                 title = stringResource(R.string.result_detection_id, detectionId),
                 body = stringResource(R.string.result_loading_explanation),
@@ -44,6 +51,20 @@ fun ResultScreen(
                 onAction = onRetry
             )
         }
+    }
+}
+
+@Preview(name = "Result - Placeholder", showBackground = true)
+@Composable
+private fun ResultPlaceholderPreview() {
+    KolasTheme {
+        ResultScreen(
+            detectionId = "det-1",
+            state = ResultUiState.Placeholder,
+            onBack = {},
+            onRetry = {},
+            onOpenChat = {}
+        )
     }
 }
 

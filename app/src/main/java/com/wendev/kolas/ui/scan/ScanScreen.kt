@@ -17,6 +17,14 @@ fun ScanScreen(
     modifier: Modifier = Modifier
 ) {
     when (state) {
+        // Slice 1 scaffold branch: delete when the real Scan states land.
+        ScanUiState.Placeholder -> PlaceholderContent(
+            title = stringResource(R.string.scan_placeholder_title),
+            body = stringResource(R.string.scan_placeholder_body),
+            showProgress = false,
+            modifier = modifier
+        )
+
         ScanUiState.RequestingPermission -> PlaceholderContent(
             title = stringResource(R.string.scan_requesting_permission_title),
             body = stringResource(R.string.scan_requesting_permission),
@@ -53,6 +61,19 @@ fun ScanScreen(
             actionLabel = stringResource(R.string.scan_retry),
             onAction = onRetry,
             modifier = modifier
+        )
+    }
+}
+
+@Preview(name = "Scan - Placeholder", showBackground = true)
+@Composable
+private fun ScanPlaceholderPreview() {
+    KolasTheme {
+        ScanScreen(
+            state = ScanUiState.Placeholder,
+            onGrantPermission = {},
+            onStartCapture = {},
+            onRetry = {}
         )
     }
 }
