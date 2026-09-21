@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark counterpart of the base theme. The parent in values/ is
+         Theme.Material.Light, which forces light status-bar icons (dark glyphs).
+         On the dark splash background those would be invisible, so swap to the
+         dark Material parent for night mode. Compose owns all real UI. -->
+    <style name="Theme.Kolas" parent="android:Theme.Material.NoActionBar" />
+</resources>

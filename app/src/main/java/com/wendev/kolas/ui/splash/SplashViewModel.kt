@@ -1,10 +1,12 @@
 package com.wendev.kolas.ui.splash
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wendev.kolas.R
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -56,9 +58,12 @@ class DefaultSplashInitializer(
     }
 }
 
-class SplashViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    @param:ApplicationContext private val context: Context
+) : ViewModel() {
 
-    private val initializer: SplashInitializer = DefaultSplashInitializer(application)
+    private val initializer: SplashInitializer = DefaultSplashInitializer(context)
 
     private val _state = MutableStateFlow<SplashUiState>(
         SplashUiState.Loading(progress = null, message = null)
@@ -93,7 +98,7 @@ class SplashViewModel(application: Application) : AndroidViewModel(application) 
             } catch (throwable: Throwable) {
                 _state.value = SplashUiState.Error(
                     message = throwable.message
-                        ?: getApplication<Application>().getString(R.string.splash_error_generic)
+                        ?: context.getString(R.string.splash_error_generic)
                 )
             }
 

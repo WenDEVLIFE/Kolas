@@ -1,4 +1,4 @@
-package com.wendev.kolas.ui.splash
+package com.wendev.kolas.ui.scan
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,22 +7,24 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun SplashRoute(
-    onFinished: () -> Unit,
-    viewModel: SplashViewModel = hiltViewModel()
+fun ScanRoute(
+    onCaptured: (String) -> Unit,
+    viewModel: ScanViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
             when (event) {
-                is SplashEvent.NavigateToHome -> onFinished()
+                is ScanEvent.Detected -> onCaptured(event.detectionId)
             }
         }
     }
 
-    SplashScreen(
+    ScanScreen(
         state = state,
+        onGrantPermission = { viewModel.onPermissionResult(granted = true) },
+        onStartCapture = viewModel::startCapture,
         onRetry = viewModel::retry
     )
 }
