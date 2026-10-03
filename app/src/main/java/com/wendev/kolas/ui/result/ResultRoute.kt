@@ -7,18 +7,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun ResultRoute(
-    detectionId: String,
     onBack: () -> Unit,
+    onScanAgain: () -> Unit,
     onOpenChat: (String) -> Unit,
     viewModel: ResultViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ResultScreen(
-        detectionId = detectionId,
         state = state,
         onBack = onBack,
+        onScanAgain = onScanAgain,
         onRetry = viewModel::retry,
-        onOpenChat = { onOpenChat(detectionId) }
+        onOpenChat = {
+            val detection = (state as? ResultUiState.Ready)?.detection
+            if (detection != null) onOpenChat(detection.id)
+        }
     )
 }

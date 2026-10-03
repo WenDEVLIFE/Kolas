@@ -48,11 +48,12 @@ fun KolasNavHost(
             SettingsRoute(onBack = { navController.popBackStack() })
         }
 
-        composable<ResultDestination> { backStackEntry ->
-            val route = backStackEntry.toRoute<ResultDestination>()
+        composable<ResultDestination> {
             ResultRoute(
-                detectionId = route.detectionId,
                 onBack = { navController.popBackStack() },
+                onScanAgain = {
+                    navController.popBackStack(MainDestination, inclusive = false)
+                },
                 onOpenChat = { detectionId ->
                     navController.navigate(ChatDestination(detectionId))
                 }

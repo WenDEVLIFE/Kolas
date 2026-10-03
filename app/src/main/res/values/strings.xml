@@ -35,15 +35,17 @@
     <string name="scan_requesting_permission">Waiting for camera access\u2026</string>
     <string name="scan_permission_denied_title">Camera access needed</string>
     <string name="scan_permission_denied">Kolas needs the camera to read your dog\'s mood.</string>
+    <string name="scan_permission_denied_permanent">Camera access is turned off. Enable it in Settings to scan your dog.</string>
     <string name="scan_grant_permission">Grant access</string>
+    <string name="scan_open_settings">Open settings</string>
     <string name="scan_camera_ready">Point the camera at your dog and tap to scan.</string>
     <string name="scan_start">Start scan</string>
     <string name="scan_capturing">Reading your dog\u2026</string>
     <string name="scan_error_title">Scan failed</string>
     <string name="scan_error_generic">Something went wrong while scanning.</string>
+    <string name="scan_error_camera">Could not capture the photo. Try again.</string>
     <string name="scan_retry">Try again</string>
-    <string name="scan_placeholder_title">Scan not built yet</string>
-    <string name="scan_placeholder_body">This screen arrives in the next slice.</string>
+    <string name="scan_shutter_content_description">Capture photo</string>
 
     <!-- History -->
     <string name="history_empty_title">No scans yet</string>
@@ -69,13 +71,19 @@
     <!-- Result -->
     <string name="result_title">Result</string>
     <string name="result_detection_id">Detection %1$s</string>
+    <string name="result_loading">Loading the reading\u2026</string>
+    <string name="result_not_found">This reading could not be found.</string>
+    <string name="result_image_missing">The photo for this reading could not be loaded.</string>
+    <string name="result_error_title">Reading unavailable</string>
+    <string name="result_photo_content_description">Photo of your dog</string>
+    <string name="result_confidence">%1$d%% confidence</string>
+    <string name="result_scores_title">Score breakdown</string>
+    <string name="result_scan_again">Scan again</string>
     <string name="result_loading_explanation">Explaining the reading\u2026</string>
     <string name="result_explanation_failed_title">Explanation unavailable</string>
     <string name="result_explanation_failed_generic">Something went wrong while explaining this reading.</string>
     <string name="result_retry">Try again</string>
     <string name="result_open_chat">Ask about this reading</string>
-    <string name="result_placeholder_title">Result not built yet</string>
-    <string name="result_placeholder_body">This screen arrives in the next slice.</string>
 
     <!-- Chat -->
     <string name="chat_title">Chat</string>

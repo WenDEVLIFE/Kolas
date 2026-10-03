@@ -22,9 +22,10 @@ import com.wendev.kolas.ui.scan.ScanRoute
 fun MainRoute(
     onOpenSettings: () -> Unit,
     onOpenResult: (String) -> Unit,
+    initialTab: MainTab = MainTab.Home,
     modifier: Modifier = Modifier
 ) {
-    var selectedTab by rememberSaveable { mutableStateOf(MainTab.Home) }
+    var selectedTab by rememberSaveable { mutableStateOf(initialTab) }
 
     MainScreen(
         selectedTab = selectedTab,
