@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wendev.kolas.R
+import com.wendev.kolas.data.ml.DogEmotionClassifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -22,31 +23,28 @@ import kotlinx.coroutines.withContext
 
 /**
  * Seam for everything the app must prepare before the home screen is usable.
- * Kept behind an interface so [SplashViewModel] stays testable and so the real
- * TFLite warm-up can land later without touching the UI layer.
+ * Kept behind an interface so [SplashViewModel] stays testable.
  */
 interface SplashInitializer {
     suspend fun initialize(onProgress: (Float) -> Unit)
 }
 
 /**
- * Startup steps that actually exist today. The emotion classifier is not wired
- * into the app yet, so this deliberately does NOT try to load a model.
+ * Starts the single-process TFLite interpreter and confirms the model asset is
+ * bundled. Construction happens on [Dispatchers.Default]; the splash keeps its
+ * own minimum on-screen time and never blocks on the warm-up longer than that.
  */
 class DefaultSplashInitializer(
-    private val context: Context
+    private val context: Context,
+    private val classifier: DogEmotionClassifier
 ) : SplashInitializer {
 
     override suspend fun initialize(onProgress: (Float) -> Unit) {
         onProgress(0f)
         withContext(Dispatchers.IO) {
             val bundledAssets = context.assets.list(BASE_PATH).orEmpty()
-            val modelBundled = MODEL_ASSET_NAME in bundledAssets
-            if (modelBundled) {
-                // TODO(android-ai-integration): warm up the TFLite Interpreter for
-                // assets/model.tflite here (see the android-ai-integration skill,
-                // "TFLite Integration"). It must stay off the main thread and must
-                // not run until the classifier is actually part of the app.
+            if (MODEL_ASSET_NAME in bundledAssets) {
+                classifier.warmUp()
             }
         }
         onProgress(1f)
@@ -60,10 +58,11 @@ class DefaultSplashInitializer(
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    @param:ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context,
+    classifier: DogEmotionClassifier
 ) : ViewModel() {
 
-    private val initializer: SplashInitializer = DefaultSplashInitializer(context)
+    private val initializer: SplashInitializer = DefaultSplashInitializer(context, classifier)
 
     private val _state = MutableStateFlow<SplashUiState>(
         SplashUiState.Loading(progress = null, message = null)
