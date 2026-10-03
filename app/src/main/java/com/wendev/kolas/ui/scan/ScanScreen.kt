@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,8 +46,14 @@ fun ScanScreen(
     onImageCaptured: (Bitmap) -> Unit,
     onCaptureFailed: (String?) -> Unit,
     onRetry: () -> Unit,
+    showNotADogDialog: Boolean = false,
+    onDismissNotADog: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    if (showNotADogDialog) {
+        NotADogDialog(onDismiss = onDismissNotADog)
+    }
+
     when (state) {
         ScanUiState.RequestingPermission -> PlaceholderContent(
             title = stringResource(R.string.scan_requesting_permission_title),
@@ -79,6 +88,20 @@ fun ScanScreen(
             modifier = modifier
         )
     }
+}
+
+@Composable
+private fun NotADogDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.scan_not_a_dog_title)) },
+        text = { Text(text = stringResource(R.string.scan_not_a_dog_body)) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.scan_not_a_dog_dismiss))
+            }
+        }
+    )
 }
 
 @Composable
@@ -322,6 +345,23 @@ private fun ScanErrorPreview() {
             onImageCaptured = {},
             onCaptureFailed = {},
             onRetry = {}
+        )
+    }
+}
+
+@Preview(name = "Scan - Not a dog", showBackground = true)
+@Composable
+private fun ScanNotADogPreview() {
+    KolasTheme {
+        ScanScreen(
+            state = ScanUiState.CameraReady,
+            onRetryPermission = {},
+            onOpenAppSettings = {},
+            onShutterClick = {},
+            onImageCaptured = {},
+            onCaptureFailed = {},
+            onRetry = {},
+            showNotADogDialog = true
         )
     }
 }

@@ -11,6 +11,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -23,6 +26,7 @@ fun ScanRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    var showNotADogDialog by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -40,6 +44,8 @@ fun ScanRoute(
                     permissionLauncher.launch(Manifest.permission.CAMERA)
 
                 is ScanEvent.Detected -> onCaptured(event.detectionId)
+
+                ScanEvent.NotADog -> showNotADogDialog = true
             }
         }
     }
@@ -51,7 +57,9 @@ fun ScanRoute(
         onShutterClick = viewModel::startCapture,
         onImageCaptured = viewModel::onImageCaptured,
         onCaptureFailed = viewModel::onCaptureFailed,
-        onRetry = viewModel::retry
+        onRetry = viewModel::retry,
+        showNotADogDialog = showNotADogDialog,
+        onDismissNotADog = { showNotADogDialog = false }
     )
 }
 

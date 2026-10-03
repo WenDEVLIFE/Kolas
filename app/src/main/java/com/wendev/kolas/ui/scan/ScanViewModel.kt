@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wendev.kolas.R
 import com.wendev.kolas.data.detection.DetectionRepository
+import com.wendev.kolas.data.ml.DogDetector
 import com.wendev.kolas.data.ml.DogEmotionClassifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 class ScanViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val classifier: DogEmotionClassifier,
+    private val dogDetector: DogDetector,
     private val detectionRepository: DetectionRepository
 ) : ViewModel() {
 
@@ -74,6 +76,12 @@ class ScanViewModel @Inject constructor(
         if (_state.value !is ScanUiState.Capturing) return
         viewModelScope.launch {
             try {
+                val dog = dogDetector.detect(bitmap)
+                if (!dog.isDog) {
+                    _state.value = ScanUiState.CameraReady
+                    _events.send(ScanEvent.NotADog)
+                    return@launch
+                }
                 val result = classifier.classify(bitmap)
                 val detection = detectionRepository.save(bitmap, result)
                 _state.value = ScanUiState.CameraReady

@@ -11,4 +11,7 @@ sealed interface ScanEvent {
 
     /** A reading was stored; navigate to the Result screen for [detectionId]. */
     data class Detected(val detectionId: String) : ScanEvent
+
+    /** The captured frame was not a dog; the Scan screen shows a blocking dialog. */
+    data object NotADog : ScanEvent
 }

@@ -46,6 +46,9 @@
     <string name="scan_error_camera">Could not capture the photo. Try again.</string>
     <string name="scan_retry">Try again</string>
     <string name="scan_shutter_content_description">Capture photo</string>
+    <string name="scan_not_a_dog_title">No dog detected</string>
+    <string name="scan_not_a_dog_body">Kolas reads dogs only. Point the camera at a dog and scan again.</string>
+    <string name="scan_not_a_dog_dismiss">Try again</string>
 
     <!-- History -->
     <string name="history_empty_title">No scans yet</string>
