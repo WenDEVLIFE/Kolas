@@ -9,6 +9,9 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -25,6 +28,9 @@ class InMemoryDetectionRepository @Inject constructor(
 
     private val lock = Mutex()
     private val detections = LinkedHashMap<String, Detection>()
+    private val _detections = MutableStateFlow<List<Detection>>(emptyList())
+
+    override fun observeDetections(): Flow<List<Detection>> = _detections.asStateFlow()
 
     override suspend fun save(bitmap: Bitmap, result: EmotionResult): Detection =
         withContext(Dispatchers.IO) {
@@ -44,7 +50,10 @@ class InMemoryDetectionRepository @Inject constructor(
                 allScores = result.allScores,
                 createdAt = System.currentTimeMillis()
             )
-            lock.withLock { detections[id] = detection }
+            lock.withLock {
+                detections[id] = detection
+                _detections.value = detections.values.toList()
+            }
             detection
         }
 

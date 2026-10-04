@@ -1,12 +1,12 @@
 package com.wendev.kolas.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wendev.kolas.R
 import com.wendev.kolas.ui.components.PlaceholderContent
-import com.wendev.kolas.ui.history.HistoryItem
 import com.wendev.kolas.ui.theme.KolasTheme
 
 @Composable
@@ -41,15 +40,11 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     when (state) {
-        HomeUiState.Empty -> HomeEmptyContent(
+        is HomeUiState.Content -> HomeContent(
+            todayCount = state.todayCount,
+            totalCount = state.totalCount,
             onScanClick = onScanClick,
             onOpenSettings = onOpenSettings,
-            modifier = modifier
-        )
-
-        is HomeUiState.Content -> PlaceholderContent(
-            title = stringResource(R.string.home_content_title),
-            body = stringResource(R.string.home_content_body),
             modifier = modifier
         )
 
@@ -62,7 +57,9 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeEmptyContent(
+private fun HomeContent(
+    todayCount: Int,
+    totalCount: Int,
     onScanClick: () -> Unit,
     onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier
@@ -74,38 +71,123 @@ private fun HomeEmptyContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            StatsRow(todayCount = todayCount, totalCount = totalCount)
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                if (totalCount == 0) {
+                    HomeEmptyBlock(
+                        onScanClick = onScanClick,
+                        onOpenSettings = onOpenSettings
+                    )
+                } else {
+                    PlaceholderContent(
+                        title = stringResource(R.string.home_content_title),
+                        body = stringResource(R.string.home_content_body)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatsRow(
+    todayCount: Int,
+    totalCount: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        StatCard(
+            value = todayCount.toString(),
+            label = stringResource(R.string.home_stat_today_label),
+            modifier = Modifier.weight(1f)
+        )
+        StatCard(
+            value = totalCount.toString(),
+            label = stringResource(R.string.home_stat_total_label),
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun StatCard(
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = stringResource(R.string.home_empty_title),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onBackground,
-                textAlign = TextAlign.Center
+                text = value,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
-            Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = stringResource(R.string.home_empty_body),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = onScanClick,
-                modifier = Modifier.heightIn(min = 48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = stringResource(R.string.home_scan_cta))
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            HomeModelStatusRow(onClick = onOpenSettings)
         }
+    }
+}
+
+@Composable
+private fun HomeEmptyBlock(
+    onScanClick: () -> Unit,
+    onOpenSettings: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.home_empty_title),
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = stringResource(R.string.home_empty_body),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+        Button(
+            onClick = onScanClick,
+            modifier = Modifier.heightIn(min = 48.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = stringResource(R.string.home_scan_cta))
+        }
+        HomeModelStatusRow(onClick = onOpenSettings)
     }
 }
 
@@ -163,20 +245,20 @@ private fun HomeModelStatusRow(
 @Composable
 private fun HomeEmptyPreview() {
     KolasTheme {
-        HomeScreen(state = HomeUiState.Empty, onScanClick = {}, onOpenSettings = {})
+        HomeScreen(
+            state = HomeUiState.Content(todayCount = 0, totalCount = 0),
+            onScanClick = {},
+            onOpenSettings = {}
+        )
     }
 }
 
-@Preview(name = "Home - Content", showBackground = true)
+@Preview(name = "Home - With scans", showBackground = true)
 @Composable
 private fun HomeContentPreview() {
     KolasTheme {
         HomeScreen(
-            state = HomeUiState.Content(
-                recent = listOf(
-                    HistoryItem(id = "1", emotion = "happy", summary = "Tail up, ears relaxed.")
-                )
-            ),
+            state = HomeUiState.Content(todayCount = 2, totalCount = 7),
             onScanClick = {},
             onOpenSettings = {}
         )

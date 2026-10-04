@@ -20,6 +20,8 @@
     <string name="main_open_settings">Open settings</string>
 
     <!-- Home -->
+    <string name="home_stat_today_label">Today\'s scans</string>
+    <string name="home_stat_total_label">Total scans</string>
     <string name="home_empty_title">No scans yet</string>
     <string name="home_empty_body">Scan your dog to read their mood. Your readings will show up here.</string>
     <string name="home_scan_cta">Scan your dog</string>

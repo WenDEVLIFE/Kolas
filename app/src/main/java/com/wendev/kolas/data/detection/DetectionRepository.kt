@@ -2,6 +2,7 @@ package com.wendev.kolas.data.detection
 
 import android.graphics.Bitmap
 import com.wendev.kolas.data.ml.EmotionResult
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Boundary between the UI and detection storage.
@@ -19,4 +20,10 @@ interface DetectionRepository {
 
     /** Returns the detection with [id], or `null` when it is not stored. */
     suspend fun get(id: String): Detection?
+
+    /**
+     * Emits every stored [Detection] whenever the set changes, so dashboards can
+     * stay in sync with new scans. The current value is emitted immediately.
+     */
+    fun observeDetections(): Flow<List<Detection>>
 }
