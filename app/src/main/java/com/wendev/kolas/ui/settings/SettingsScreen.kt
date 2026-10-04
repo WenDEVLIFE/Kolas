@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
@@ -73,10 +74,8 @@ private fun SettingsContent(
             selected = state.themeMode,
             onThemeModeSelected = onThemeModeSelected
         )
-        ModelSection(
-            installed = state.modelInstalled,
-            version = state.modelVersion
-        )
+        ModelsSection()
+        AboutSection(appVersion = state.appVersion)
     }
 }
 
@@ -91,11 +90,7 @@ private fun ThemeSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(R.string.settings_appearance_title),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+        SectionTitle(stringResource(R.string.settings_appearance_title))
         Text(
             text = stringResource(R.string.settings_theme_label),
             style = MaterialTheme.typography.bodyLarge,
@@ -122,29 +117,90 @@ private fun ThemeSection(
 }
 
 @Composable
-private fun ModelSection(
-    installed: Boolean,
-    version: String?,
+private fun SectionTitle(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+}
+
+@Composable
+private fun ModelsSection(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        SectionTitle(stringResource(R.string.settings_models_title))
+        ModelRow(
+            name = stringResource(R.string.settings_model_emotion_name),
+            description = stringResource(R.string.settings_model_emotion_description)
+        )
+        ModelRow(
+            name = stringResource(R.string.settings_model_detector_name),
+            description = stringResource(R.string.settings_model_detector_description)
+        )
+    }
+}
+
+@Composable
+private fun ModelRow(
+    name: String,
+    description: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Text(
+            text = stringResource(R.string.settings_model_status_ready),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun AboutSection(
+    appVersion: String,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        SectionTitle(stringResource(R.string.settings_about_title))
         Text(
-            text = stringResource(R.string.settings_model_status),
-            style = MaterialTheme.typography.titleMedium,
+            text = stringResource(R.string.settings_about_app_name),
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
         Text(
-            text = when {
-                installed && version != null ->
-                    stringResource(R.string.settings_model_installed_version, version)
-
-                installed -> stringResource(R.string.settings_model_installed)
-                else -> stringResource(R.string.settings_model_missing)
-            },
-            style = MaterialTheme.typography.bodyLarge,
+            text = stringResource(R.string.settings_about_tagline),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = stringResource(R.string.settings_about_version, appVersion),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = stringResource(R.string.settings_about_privacy),
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
@@ -169,15 +225,14 @@ private fun SettingsLoadingPreview() {
     }
 }
 
-@Preview(name = "Settings - Content (system, installed)", showBackground = true)
+@Preview(name = "Settings - Content (system)", showBackground = true)
 @Composable
 private fun SettingsContentPreview() {
     KolasTheme {
         SettingsScreen(
             state = SettingsUiState.Content(
                 themeMode = ThemeMode.SYSTEM,
-                modelInstalled = true,
-                modelVersion = "1.0"
+                appVersion = "1.0"
             ),
             onBack = {},
             onThemeModeSelected = {}
@@ -192,8 +247,7 @@ private fun SettingsContentLightPreview() {
         SettingsScreen(
             state = SettingsUiState.Content(
                 themeMode = ThemeMode.LIGHT,
-                modelInstalled = false,
-                modelVersion = null
+                appVersion = "1.0"
             ),
             onBack = {},
             onThemeModeSelected = {}
@@ -208,8 +262,7 @@ private fun SettingsContentDarkPreview() {
         SettingsScreen(
             state = SettingsUiState.Content(
                 themeMode = ThemeMode.DARK,
-                modelInstalled = true,
-                modelVersion = null
+                appVersion = "1.0"
             ),
             onBack = {},
             onThemeModeSelected = {}

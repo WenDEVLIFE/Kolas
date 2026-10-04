@@ -2,6 +2,7 @@ package com.wendev.kolas.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wendev.kolas.BuildConfig
 import com.wendev.kolas.data.preferences.SettingsPreferences
 import com.wendev.kolas.data.preferences.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,12 +32,9 @@ class SettingsViewModel @Inject constructor(
                 _state.update { current ->
                     when (current) {
                         is SettingsUiState.Content -> current.copy(themeMode = themeMode)
-                        // Slice 1 has no download flow yet, so the only honest Content
-                        // is "no model installed".
                         else -> SettingsUiState.Content(
                             themeMode = themeMode,
-                            modelInstalled = false,
-                            modelVersion = null
+                            appVersion = BuildConfig.VERSION_NAME
                         )
                     }
                 }

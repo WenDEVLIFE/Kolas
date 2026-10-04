@@ -9,8 +9,7 @@ sealed interface SettingsUiState {
 
     data class Content(
         val themeMode: ThemeMode,
-        val modelInstalled: Boolean,
-        val modelVersion: String?
+        val appVersion: String
     ) : SettingsUiState
 
     data class Downloading(val progress: Float?) : SettingsUiState

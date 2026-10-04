@@ -65,10 +65,17 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
-    <string name="settings_model_status">Emotion model</string>
-    <string name="settings_model_installed">Installed and ready.</string>
-    <string name="settings_model_installed_version">Installed and ready. Version %1$s</string>
-    <string name="settings_model_missing">Not installed.</string>
+    <string name="settings_models_title">Models</string>
+    <string name="settings_model_emotion_name">Emotion model</string>
+    <string name="settings_model_emotion_description">Reads your dog\'s mood from five emotions. Runs on your device.</string>
+    <string name="settings_model_detector_name">Dog detector</string>
+    <string name="settings_model_detector_description">Checks that a dog is in the frame before scanning. Runs on your device.</string>
+    <string name="settings_model_status_ready">Ready</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_about_app_name">Kolas</string>
+    <string name="settings_about_tagline">Sensing how your dog feels</string>
+    <string name="settings_about_version">Version %1$s</string>
+    <string name="settings_about_privacy">All scanning happens on your device. Your photos stay in the app.</string>
     <string name="settings_downloading">Downloading the model\u2026</string>
 
     <!-- Result -->
