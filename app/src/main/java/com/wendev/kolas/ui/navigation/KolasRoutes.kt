@@ -28,6 +28,22 @@ data object HistoryDestination
 @Serializable
 data object SettingsDestination
 
+/** Pushed from the Settings menu. */
+@Serializable
+data object ThemeDestination
+
+/** Pushed from the Settings menu. */
+@Serializable
+data object ModelsDestination
+
+/** Pushed from the Settings menu. */
+@Serializable
+data object AboutDestination
+
+/** Pushed from the Settings menu. */
+@Serializable
+data object TermsDestination
+
 /** Pushed full-screen, carrying the detection it explains. */
 @Serializable
 data class ResultDestination(val detectionId: String)

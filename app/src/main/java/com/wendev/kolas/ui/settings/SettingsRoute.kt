@@ -1,20 +1,23 @@
 package com.wendev.kolas.ui.settings
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.Modifier
 
 @Composable
 fun SettingsRoute(
     onBack: () -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel()
+    onOpenTheme: () -> Unit,
+    onOpenModels: () -> Unit,
+    onOpenAbout: () -> Unit,
+    onOpenTerms: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
     SettingsScreen(
-        state = state,
         onBack = onBack,
-        onThemeModeSelected = viewModel::onThemeModeSelected
+        onOpenTheme = onOpenTheme,
+        onOpenModels = onOpenModels,
+        onOpenAbout = onOpenAbout,
+        onOpenTerms = onOpenTerms,
+        modifier = modifier
     )
 }

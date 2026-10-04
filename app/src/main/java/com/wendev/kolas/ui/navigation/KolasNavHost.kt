@@ -10,7 +10,11 @@ import androidx.navigation.toRoute
 import com.wendev.kolas.ui.chat.ChatRoute
 import com.wendev.kolas.ui.main.MainRoute
 import com.wendev.kolas.ui.result.ResultRoute
+import com.wendev.kolas.ui.settings.AboutRoute
+import com.wendev.kolas.ui.settings.ModelsRoute
 import com.wendev.kolas.ui.settings.SettingsRoute
+import com.wendev.kolas.ui.settings.ThemeRoute
+import com.wendev.kolas.ui.settings.TermsRoute
 import com.wendev.kolas.ui.splash.SplashRoute
 
 @Composable
@@ -45,7 +49,29 @@ fun KolasNavHost(
         }
 
         composable<SettingsDestination> {
-            SettingsRoute(onBack = { navController.popBackStack() })
+            SettingsRoute(
+                onBack = { navController.popBackStack() },
+                onOpenTheme = { navController.navigate(ThemeDestination) },
+                onOpenModels = { navController.navigate(ModelsDestination) },
+                onOpenAbout = { navController.navigate(AboutDestination) },
+                onOpenTerms = { navController.navigate(TermsDestination) }
+            )
+        }
+
+        composable<ThemeDestination> {
+            ThemeRoute(onBack = { navController.popBackStack() })
+        }
+
+        composable<ModelsDestination> {
+            ModelsRoute(onBack = { navController.popBackStack() })
+        }
+
+        composable<AboutDestination> {
+            AboutRoute(onBack = { navController.popBackStack() })
+        }
+
+        composable<TermsDestination> {
+            TermsRoute(onBack = { navController.popBackStack() })
         }
 
         composable<ResultDestination> {
