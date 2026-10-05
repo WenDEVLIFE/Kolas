@@ -7,8 +7,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Boundary between the UI and detection storage.
  *
- * Slice 2 ships an in-memory implementation; Slice 4 swaps in a Room-backed one
- * behind this same interface so neither Scan nor Result has to change.
+ * Storage is Room (SQLite) backed so readings survive process death. This
+ * interface keeps the UI independent of the storage engine, so neither Scan nor
+ * Result has to change when the implementation is swapped.
  */
 interface DetectionRepository {
 
