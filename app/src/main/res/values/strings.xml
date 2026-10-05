@@ -58,6 +58,9 @@
     <string name="history_error_title">Could not load history</string>
     <string name="history_error_generic">Something went wrong while loading your history.</string>
     <string name="history_retry">Try again</string>
+    <string name="history_item_meta">%1$s \u00b7 %2$s</string>
+    <string name="history_time_today">Today, %1$s</string>
+    <string name="history_time_other">%1$s, %2$s</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
