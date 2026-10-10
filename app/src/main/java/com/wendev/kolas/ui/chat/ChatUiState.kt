@@ -9,6 +9,8 @@ sealed interface ChatUiState {
 
     data class Downloading(val progress: Float?) : ChatUiState
 
+    data object Preparing : ChatUiState
+
     data class Error(val message: String) : ChatUiState
 
     data class Ready(

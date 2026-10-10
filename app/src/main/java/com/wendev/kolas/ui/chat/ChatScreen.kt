@@ -45,6 +45,7 @@ fun ChatScreen(
     onBack: () -> Unit,
     onDownloadClick: () -> Unit,
     onCancelDownload: () -> Unit,
+    onRetry: () -> Unit,
     onInputChange: (String) -> Unit,
     onSend: () -> Unit,
     modifier: Modifier = Modifier
@@ -67,11 +68,17 @@ fun ChatScreen(
                 onCancel = onCancelDownload
             )
 
+            ChatUiState.Preparing -> PlaceholderContent(
+                title = stringResource(R.string.chat_preparing_title),
+                body = stringResource(R.string.chat_preparing),
+                showProgress = true
+            )
+
             is ChatUiState.Error -> PlaceholderContent(
-                title = stringResource(R.string.chat_download_failed_title),
+                title = stringResource(R.string.chat_error_title),
                 body = state.message,
                 actionLabel = stringResource(R.string.chat_retry),
-                onAction = onDownloadClick
+                onAction = onRetry
             )
 
             is ChatUiState.Ready -> ChatConversation(
@@ -243,7 +250,7 @@ private fun ChatNoModelPreview() {
         ChatScreen(
             detectionId = "det-1",
             state = ChatUiState.NoModel,
-            onBack = {}, onDownloadClick = {}, onCancelDownload = {},
+            onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
             onInputChange = {}, onSend = {}
         )
     }
@@ -256,7 +263,20 @@ private fun ChatDownloadingPreview() {
         ChatScreen(
             detectionId = "det-1",
             state = ChatUiState.Downloading(progress = 0.4f),
-            onBack = {}, onDownloadClick = {}, onCancelDownload = {},
+            onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
+            onInputChange = {}, onSend = {}
+        )
+    }
+}
+
+@Preview(name = "Chat - Preparing", showBackground = true)
+@Composable
+private fun ChatPreparingPreview() {
+    KolasTheme {
+        ChatScreen(
+            detectionId = "det-1",
+            state = ChatUiState.Preparing,
+            onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
             onInputChange = {}, onSend = {}
         )
     }
@@ -276,7 +296,7 @@ private fun ChatConversationPreview() {
                 input = "",
                 isGenerating = false
             ),
-            onBack = {}, onDownloadClick = {}, onCancelDownload = {},
+            onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
             onInputChange = {}, onSend = {}
         )
     }
@@ -289,7 +309,7 @@ private fun ChatErrorPreview() {
         ChatScreen(
             detectionId = "det-1",
             state = ChatUiState.Error(message = stringResource(R.string.chat_download_failed_generic)),
-            onBack = {}, onDownloadClick = {}, onCancelDownload = {},
+            onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
             onInputChange = {}, onSend = {}
         )
     }

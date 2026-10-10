@@ -131,15 +131,17 @@
     <string name="chat_download_model">Download model</string>
     <string name="chat_download_progress">%1$d%%</string>
     <string name="chat_download_cancel">Cancel</string>
-    <string name="chat_download_failed_title">Download failed</string>
     <string name="chat_download_failed_generic">Something went wrong while downloading the model.</string>
     <string name="chat_download_error_network">Couldn\'t reach the server. Check your connection and try again.</string>
     <string name="chat_download_error_http">The server returned an error (%1$d). Try again later.</string>
     <string name="chat_download_error_interrupted">The download was interrupted. Try again.</string>
     <string name="chat_retry">Try again</string>
     <string name="chat_downloading">Downloading the model\u2026</string>
+    <string name="chat_error_title">Model unavailable</string>
+    <string name="chat_preparing_title">Preparing the model</string>
+    <string name="chat_preparing">Loading the model into memory\u2026</string>
+    <string name="chat_model_error_generic">Couldn\'t load the model. Try again or choose a smaller model.</string>
     <string name="chat_input_hint">Ask about this reading</string>
     <string name="chat_send">Send</string>
     <string name="chat_reply_failed">Sorry, something went wrong while writing a reply.</string>
-    <string name="chat_stub_reply">This is a preview reply. Once the on-device model is connected, Kolas will answer here based on your dog\'s reading.</string>
 </resources>

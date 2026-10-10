@@ -11,6 +11,7 @@ import com.wendev.kolas.data.llm.ChatAuthor
 import com.wendev.kolas.data.llm.ChatMessage
 import com.wendev.kolas.data.llm.ChatPrompt
 import com.wendev.kolas.data.llm.LlamaInference
+import com.wendev.kolas.data.llm.LlmEngineStatus
 import com.wendev.kolas.data.llm.LlmModelManager
 import com.wendev.kolas.data.llm.LlmModelStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -52,16 +52,32 @@ class ChatViewModel @Inject constructor(
 
     private var generationJob: Job? = null
 
-    private val gate: StateFlow<Gate> = llmModelManager.models
-        .map { models -> models.firstOrNull { it.isSelected } ?: models.firstOrNull() }
-        .map { selected -> selected?.status.toGate() }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, Gate.NoModel)
+    private val gate: StateFlow<Gate> =
+        combine(
+            llmModelManager.models,
+            llamaInference.status
+        ) { models, engineStatus ->
+            val selected = models.firstOrNull { it.isSelected } ?: models.firstOrNull()
+            val modelStatus = selected?.status
+            when {
+                selected == null -> Gate.NoModel
+                modelStatus is LlmModelStatus.Downloading -> Gate.Downloading(modelStatus.progress)
+                modelStatus is LlmModelStatus.Failed -> Gate.Failed(modelStatus.message)
+                modelStatus == LlmModelStatus.Downloaded && engineStatus is LlmEngineStatus.Error ->
+                    Gate.Failed(engineStatus.message)
+                modelStatus == LlmModelStatus.Downloaded && engineStatus is LlmEngineStatus.Ready ->
+                    Gate.Ready
+                modelStatus == LlmModelStatus.Downloaded -> Gate.Preparing
+                else -> Gate.NoModel
+            }
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, Gate.NoModel)
 
     val state: StateFlow<ChatUiState> =
         combine(gate, messages, input, isGenerating) { g, m, i, generating ->
             when (g) {
                 Gate.NoModel -> ChatUiState.NoModel
                 is Gate.Downloading -> ChatUiState.Downloading(g.progress)
+                Gate.Preparing -> ChatUiState.Preparing
                 is Gate.Failed -> ChatUiState.Error(g.message)
                 Gate.Ready -> ChatUiState.Ready(
                     messages = m,
@@ -77,20 +93,21 @@ class ChatViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { reading = detectionRepository.get(detectionId) }
-
-        viewModelScope.launch {
-            llmModelManager.models.collect { models ->
-                val selected = models.firstOrNull { it.isSelected } ?: models.firstOrNull()
-                if (selected?.status == LlmModelStatus.Downloaded) {
-                    llamaInference.load(llmModelManager.fileFor(selected.spec))
-                }
-            }
-        }
     }
 
     fun onDownloadClick() = llmModelManager.download(llmModelManager.selectedModel().id)
 
     fun onCancelDownload() = llmModelManager.cancel(llmModelManager.selectedModel().id)
+
+    fun onRetry() {
+        val selected = llmModelManager.selectedModel()
+        val file = llmModelManager.fileFor(selected)
+        if (file.exists()) {
+            viewModelScope.launch { runCatching { llamaInference.load(file) } }
+        } else {
+            llmModelManager.download(selected.id)
+        }
+    }
 
     fun onInputChange(value: String) {
         input.value = value
@@ -142,16 +159,10 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun LlmModelStatus?.toGate(): Gate = when (this) {
-        is LlmModelStatus.Downloading -> Gate.Downloading(progress)
-        LlmModelStatus.Downloaded -> Gate.Ready
-        is LlmModelStatus.Failed -> Gate.Failed(message)
-        LlmModelStatus.NotDownloaded, null -> Gate.NoModel
-    }
-
     private sealed interface Gate {
         data object NoModel : Gate
         data class Downloading(val progress: Float?) : Gate
+        data object Preparing : Gate
         data class Failed(val message: String) : Gate
         data object Ready : Gate
     }

@@ -19,6 +19,7 @@ fun ChatRoute(
         onBack = onBack,
         onDownloadClick = viewModel::onDownloadClick,
         onCancelDownload = viewModel::onCancelDownload,
+        onRetry = viewModel::onRetry,
         onInputChange = viewModel::onInputChange,
         onSend = viewModel::onSend
     )
