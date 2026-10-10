@@ -16,6 +16,10 @@ fun ChatRoute(
     ChatScreen(
         detectionId = detectionId,
         state = state,
-        onBack = onBack
+        onBack = onBack,
+        onDownloadClick = viewModel::onDownloadClick,
+        onCancelDownload = viewModel::onCancelDownload,
+        onInputChange = viewModel::onInputChange,
+        onSend = viewModel::onSend
     )
 }
