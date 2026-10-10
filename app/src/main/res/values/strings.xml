@@ -78,6 +78,18 @@
     <string name="settings_model_detector_name">Dog detector</string>
     <string name="settings_model_detector_description">Checks that a dog is in the frame before scanning. Runs on your device.</string>
     <string name="settings_model_status_ready">Ready</string>
+    <string name="settings_builtin_models_title">Built-in models</string>
+    <string name="settings_chat_models_title">Chat model</string>
+    <string name="settings_chat_model_summary">%1$s \u00b7 %2$s \u00b7 needs %3$d GB RAM</string>
+    <string name="settings_model_tier_fast">Fast</string>
+    <string name="settings_model_tier_balanced">Balanced</string>
+    <string name="settings_model_tier_quality">Quality</string>
+    <string name="settings_model_download">Download</string>
+    <string name="settings_model_download_percent">%1$d%%</string>
+    <string name="settings_model_downloading">Downloading\u2026</string>
+    <string name="settings_model_cancel">Cancel</string>
+    <string name="settings_model_retry">Retry</string>
+    <string name="settings_models_loading">Loading models\u2026</string>
     <string name="about_logo_content_description">Kolas logo</string>
     <string name="settings_about_tagline">Sensing how your dog feels</string>
     <string name="settings_about_version">Version %1$s</string>
@@ -115,8 +127,19 @@
     <!-- Chat -->
     <string name="chat_title">Chat</string>
     <string name="chat_no_model_title">Model not available</string>
-    <string name="chat_no_model">Download the emotion model to ask questions about this reading.</string>
+    <string name="chat_no_model">Download the on-device chat model (about 1 GB) to ask questions about this reading.</string>
+    <string name="chat_download_model">Download model</string>
+    <string name="chat_download_progress">%1$d%%</string>
+    <string name="chat_download_cancel">Cancel</string>
+    <string name="chat_download_failed_title">Download failed</string>
+    <string name="chat_download_failed_generic">Something went wrong while downloading the model.</string>
+    <string name="chat_download_error_network">Couldn\'t reach the server. Check your connection and try again.</string>
+    <string name="chat_download_error_http">The server returned an error (%1$d). Try again later.</string>
+    <string name="chat_download_error_interrupted">The download was interrupted. Try again.</string>
+    <string name="chat_retry">Try again</string>
     <string name="chat_downloading">Downloading the model\u2026</string>
-    <string name="chat_ready">Ask anything about this reading.</string>
-    <string name="chat_generating">Thinking\u2026</string>
+    <string name="chat_input_hint">Ask about this reading</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_reply_failed">Sorry, something went wrong while writing a reply.</string>
+    <string name="chat_stub_reply">This is a preview reply. Once the on-device model is connected, Kolas will answer here based on your dog\'s reading.</string>
 </resources>

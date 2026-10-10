@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.wendev.kolas.data.preferences.LlmPreferences
 import com.wendev.kolas.data.preferences.SettingsPreferences
 import dagger.Module
 import dagger.Provides
@@ -37,4 +38,10 @@ object SettingsModule {
     fun provideSettingsPreferences(
         dataStore: DataStore<Preferences>
     ): SettingsPreferences = SettingsPreferences(dataStore)
+
+    @Provides
+    @Singleton
+    fun provideLlmPreferences(
+        dataStore: DataStore<Preferences>
+    ): LlmPreferences = LlmPreferences(dataStore)
 }
