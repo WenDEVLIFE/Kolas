@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wendev.kolas.R
+import com.wendev.kolas.data.chat.ChatRepository
 import com.wendev.kolas.data.detection.Detection
 import com.wendev.kolas.data.detection.DetectionRepository
 import com.wendev.kolas.data.llm.ChatAuthor
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,7 +40,8 @@ class ChatViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val detectionRepository: DetectionRepository,
     private val llmModelManager: LlmModelManager,
-    private val llamaInference: LlamaInference
+    private val llamaInference: LlamaInference,
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
 
     private val detectionId: String = savedStateHandle.get<String>(DETECTION_ID_ARG).orEmpty()
@@ -93,6 +96,12 @@ class ChatViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { reading = detectionRepository.get(detectionId) }
+        viewModelScope.launch {
+            val saved = chatRepository.observeMessages(detectionId).first()
+            if (saved.isNotEmpty() && messages.value.isEmpty()) {
+                messages.value = saved
+            }
+        }
     }
 
     fun onDownloadClick() = llmModelManager.download(llmModelManager.selectedModel().id)
@@ -124,6 +133,7 @@ class ChatViewModel @Inject constructor(
         isGenerating.value = true
 
         generationJob = viewModelScope.launch {
+            chatRepository.append(detectionId, userMessage)
             val prompt = ChatPrompt.buildMessages(
                 emotion = reading?.emotion.orEmpty(),
                 confidence = reading?.confidence ?: 0f,
@@ -135,11 +145,14 @@ class ChatViewModel @Inject constructor(
                     builder.append(delta)
                     replaceLastAssistant(builder.toString())
                 }
+                persistAssistant(builder.toString())
             } catch (cancellation: CancellationException) {
                 throw cancellation
             } catch (throwable: Throwable) {
                 if (builder.isEmpty()) {
-                    replaceLastAssistant(context.getString(R.string.chat_reply_failed))
+                    val reply = context.getString(R.string.chat_reply_failed)
+                    replaceLastAssistant(reply)
+                    persistAssistant(reply)
                 }
             } finally {
                 isGenerating.value = false
@@ -156,6 +169,13 @@ class ChatViewModel @Inject constructor(
         messages.update { current ->
             if (current.isEmpty()) current
             else current.dropLast(1) + ChatMessage(ChatAuthor.KOLAS, text)
+        }
+    }
+
+    private suspend fun persistAssistant(text: String) {
+        val trimmed = text.trim()
+        if (trimmed.isNotEmpty()) {
+            chatRepository.append(detectionId, ChatMessage(ChatAuthor.KOLAS, trimmed))
         }
     }
 

@@ -1,6 +1,17 @@
 package com.wendev.kolas.ui.chat
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -8,10 +19,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
@@ -24,10 +37,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wendev.kolas.R
@@ -114,8 +136,11 @@ private fun ChatConversation(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(state.messages) { message ->
-                MessageBubble(message = message)
+            itemsIndexed(state.messages) { index, message ->
+                val streaming = state.isGenerating &&
+                    index == state.messages.lastIndex &&
+                    message.author == ChatAuthor.KOLAS
+                AnimatedMessageBubble(message = message, streaming = streaming)
             }
         }
 
@@ -148,8 +173,37 @@ private fun ChatConversation(
 }
 
 @Composable
-private fun MessageBubble(message: ChatMessage, modifier: Modifier = Modifier) {
+private fun AnimatedMessageBubble(
+    message: ChatMessage,
+    streaming: Boolean,
+    modifier: Modifier = Modifier
+) {
+    var appeared by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { appeared = true }
+
+    AnimatedVisibility(
+        visible = appeared,
+        enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
+            slideInVertically(animationSpec = tween(durationMillis = 220)) { height -> height / 3 },
+        modifier = modifier
+    ) {
+        MessageBubble(message = message, streaming = streaming)
+    }
+}
+
+@Composable
+private fun MessageBubble(
+    message: ChatMessage,
+    streaming: Boolean,
+    modifier: Modifier = Modifier
+) {
     val isUser = message.author == ChatAuthor.USER
+    val contentColor = if (isUser) {
+        MaterialTheme.colorScheme.onPrimaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
@@ -163,19 +217,102 @@ private fun MessageBubble(message: ChatMessage, modifier: Modifier = Modifier) {
             shape = MaterialTheme.shapes.medium,
             modifier = Modifier.widthIn(max = 300.dp)
         ) {
-            Text(
-                text = message.text.ifBlank { "\u2026" },
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isUser) {
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                },
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+            if (streaming && message.text.isBlank()) {
+                TypingIndicator(
+                    color = contentColor,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
+                )
+            } else {
+                StreamingText(
+                    text = message.text,
+                    streaming = streaming,
+                    color = contentColor,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+/** Renders the message text; while [streaming], a blinking caret trails the text. */
+@Composable
+private fun StreamingText(
+    text: String,
+    streaming: Boolean,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    if (!streaming) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = color,
+            modifier = modifier
+        )
+        return
+    }
+
+    val transition = rememberInfiniteTransition(label = "caret")
+    val caretAlpha by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 520, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "caret-alpha"
+    )
+
+    Text(
+        text = buildAnnotatedString {
+            append(text)
+            withStyle(SpanStyle(color = color.copy(alpha = caretAlpha))) {
+                append("\u258F")
+            }
+        },
+        style = MaterialTheme.typography.bodyMedium,
+        color = color,
+        modifier = modifier
+    )
+}
+
+/** Three pulsing dots shown while the model is thinking. */
+@Composable
+private fun TypingIndicator(
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    val transition = rememberInfiniteTransition(label = "typing")
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(TYPING_DOT_COUNT) { index ->
+            val alpha by transition.animateFloat(
+                initialValue = 0.25f,
+                targetValue = 1f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(
+                        durationMillis = 480,
+                        delayMillis = index * 160,
+                        easing = LinearEasing
+                    ),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "dot-$index"
+            )
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(color.copy(alpha = alpha))
             )
         }
     }
 }
+
+private const val TYPING_DOT_COUNT = 3
 
 @Composable
 private fun ChatDownloadingContent(
@@ -295,6 +432,26 @@ private fun ChatConversationPreview() {
                 ),
                 input = "",
                 isGenerating = false
+            ),
+            onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
+            onInputChange = {}, onSend = {}
+        )
+    }
+}
+
+@Preview(name = "Chat - Streaming", showBackground = true)
+@Composable
+private fun ChatStreamingPreview() {
+    KolasTheme {
+        ChatScreen(
+            detectionId = "det-1",
+            state = ChatUiState.Ready(
+                messages = listOf(
+                    ChatMessage(ChatAuthor.USER, "Why is my dog alert?"),
+                    ChatMessage(ChatAuthor.KOLAS, "An alert reading")
+                ),
+                input = "",
+                isGenerating = true
             ),
             onBack = {}, onDownloadClick = {}, onCancelDownload = {}, onRetry = {},
             onInputChange = {}, onSend = {}
