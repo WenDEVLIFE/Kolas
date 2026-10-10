@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kolas"
 include(":app")
+include(":llama")
  
